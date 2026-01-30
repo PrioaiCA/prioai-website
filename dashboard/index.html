@@ -703,6 +703,67 @@
         .crop-container { width: 100%; height: 300px; background: var(--bg-tertiary); border-radius: 8px; overflow: hidden; }
         .crop-container img { max-width: 100%; display: block; }
         .crop-actions { display: flex; gap: 12px; margin-top: 16px; justify-content: flex-end; }
+        
+        /* Synced Input Styles */
+        .sync-badge { font-size: 0.625rem; background: rgba(59,130,246,0.15); color: var(--accent); padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+        .input-synced { background: var(--bg-tertiary) !important; color: var(--text-secondary) !important; cursor: not-allowed; opacity: 0.8; }
+        .sync-notice { font-size: 0.75rem; color: var(--text-muted); margin: 8px 0 16px; padding: 8px 12px; background: rgba(59,130,246,0.08); border-radius: 6px; border-left: 3px solid var(--accent); }
+        
+        /* Billing Section Styles */
+        .billing-section { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .billing-section:last-of-type { border-bottom: none; margin-bottom: 16px; }
+        .billing-section-header { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; }
+        
+        .billing-plan-card { background: var(--bg-tertiary); border-radius: 12px; padding: 20px; }
+        .billing-plan-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+        .billing-plan-name { font-size: 1.25rem; font-weight: 600; color: var(--accent); }
+        .billing-plan-price { display: flex; align-items: baseline; gap: 2px; }
+        .billing-price-amount { font-size: 1.5rem; font-weight: 700; }
+        .billing-price-period { font-size: 0.875rem; color: var(--text-secondary); }
+        .billing-plan-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .billing-detail-item { display: flex; flex-direction: column; gap: 4px; }
+        .billing-detail-label { font-size: 0.75rem; color: var(--text-muted); }
+        .billing-detail-value { font-size: 0.9rem; font-weight: 500; }
+        .billing-status-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
+        .billing-status-badge.active { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .billing-status-badge.paused { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .billing-status-badge.cancelled { background: rgba(239,68,68,0.15); color: #ef4444; }
+        
+        .billing-payment-card { display: flex; align-items: center; gap: 16px; background: var(--bg-tertiary); border-radius: 12px; padding: 16px 20px; }
+        .payment-card-icon { font-size: 1.5rem; }
+        .payment-card-details { flex: 1; }
+        .payment-card-brand { font-weight: 600; font-size: 0.9rem; }
+        .payment-card-number { font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+        
+        .billing-usage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 12px; }
+        .billing-usage-item { text-align: center; }
+        .billing-usage-value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+        .billing-usage-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+        .billing-usage-bar { height: 8px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden; }
+        .billing-usage-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #8B5CF6); border-radius: 4px; transition: width 0.3s ease; }
+        
+        .billing-history-list { max-height: 200px; overflow-y: auto; }
+        .billing-history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .billing-history-item:last-child { border-bottom: none; }
+        .billing-history-date { font-size: 0.875rem; }
+        .billing-history-amount { font-weight: 600; font-size: 0.9rem; }
+        .billing-history-status { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; }
+        .billing-history-status.paid { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .billing-history-status.pending { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .billing-history-status.failed { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .billing-history-empty { text-align: center; color: var(--text-muted); padding: 24px; font-size: 0.875rem; }
+        
+        .billing-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        
+        .btn-sm { padding: 8px 16px; font-size: 0.8rem; }
+        
+        @media (max-width: 600px) {
+            .billing-usage-grid { grid-template-columns: 1fr; gap: 12px; }
+            .billing-plan-details { grid-template-columns: 1fr; }
+            .billing-payment-card { flex-direction: column; text-align: center; }
+            .billing-actions { flex-direction: column; }
+            .billing-actions .btn { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -1454,14 +1515,15 @@
                 <form id="settingsForm">
                     <div class="profile-form-row">
                         <div class="profile-form-group">
-                            <label for="settingsPhone">Your Phone Number</label>
-                            <input type="tel" id="settingsPhone" placeholder="+1 (555) 123-4567">
+                            <label for="settingsPhone">Your Phone Number <span class="sync-badge" title="Synced from your account">🔄 Synced</span></label>
+                            <input type="tel" id="settingsPhone" placeholder="+1 (555) 123-4567" readonly class="input-synced">
                         </div>
                         <div class="profile-form-group">
-                            <label for="settingsCalendar">Calendar Email</label>
-                            <input type="email" id="settingsCalendar" placeholder="calendar@gmail.com">
+                            <label for="settingsCalendar">Calendar Email <span class="sync-badge" title="Synced from your account">🔄 Synced</span></label>
+                            <input type="email" id="settingsCalendar" placeholder="calendar@gmail.com" readonly class="input-synced">
                         </div>
                     </div>
+                    <p class="sync-notice">Phone and email are synced from your account and cannot be edited here. Contact support to update.</p>
                     <div class="profile-form-row">
                         <div class="profile-form-group">
                             <label for="settingsStart">Available Start</label>
@@ -1494,14 +1556,20 @@
             <div class="profile-card">
                 <div class="profile-section-title">Change Password</div>
                 <form id="passwordForm">
+                    <div class="profile-form-row single">
+                        <div class="profile-form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter your current password" required>
+                        </div>
+                    </div>
                     <div class="profile-form-row">
                         <div class="profile-form-group">
                             <label for="newPassword">New Password</label>
-                            <input type="password" id="newPassword" placeholder="Min. 8 characters" minlength="8">
+                            <input type="password" id="newPassword" placeholder="Min. 8 characters" minlength="8" required>
                         </div>
                         <div class="profile-form-group">
-                            <label for="confirmNewPassword">Confirm Password</label>
-                            <input type="password" id="confirmNewPassword" placeholder="Confirm new password" minlength="8">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword" placeholder="Confirm new password" minlength="8" required>
                         </div>
                     </div>
                     <p class="form-success" id="passwordSuccess"></p>
@@ -1513,12 +1581,86 @@
             <!-- Billing -->
             <div class="profile-card">
                 <div class="profile-section-title">💳 Billing & Subscription</div>
-                <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:16px;">Manage your subscription, update payment methods, or view invoices.</p>
-                <div style="display:flex;flex-wrap:wrap;gap:12px;">
-                    <button class="btn btn-primary" id="manageBillingBtn">Manage Subscription</button>
-                    <button class="btn btn-secondary" onclick="window.open('https://billing.stripe.com/p/login/test_xxx', '_blank')">View Invoices</button>
+                
+                <!-- Current Plan -->
+                <div class="billing-section">
+                    <div class="billing-section-header">Current Plan</div>
+                    <div class="billing-plan-card">
+                        <div class="billing-plan-info">
+                            <div class="billing-plan-name" id="billingPlanName">Starter</div>
+                            <div class="billing-plan-price">
+                                <span class="billing-price-amount" id="billingPlanPrice">$149</span>
+                                <span class="billing-price-period">/month</span>
+                            </div>
+                        </div>
+                        <div class="billing-plan-details">
+                            <div class="billing-detail-item">
+                                <span class="billing-detail-label">Call Limit</span>
+                                <span class="billing-detail-value" id="billingCallLimit">1,000 calls/mo</span>
+                            </div>
+                            <div class="billing-detail-item">
+                                <span class="billing-detail-label">Status</span>
+                                <span class="billing-status-badge active" id="billingPlanStatus">Active</span>
+                            </div>
+                            <div class="billing-detail-item">
+                                <span class="billing-detail-label">Next Billing Date</span>
+                                <span class="billing-detail-value" id="billingNextDate">-</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="upgradePlanBtn">Upgrade Plan</button>
+                    </div>
                 </div>
-                <p id="billingStatus" style="margin-top:12px;font-size:0.875rem;"></p>
+                
+                <!-- Payment Method -->
+                <div class="billing-section">
+                    <div class="billing-section-header">Payment Method</div>
+                    <div class="billing-payment-card" id="billingPaymentCard">
+                        <div class="payment-card-icon">💳</div>
+                        <div class="payment-card-details">
+                            <div class="payment-card-brand" id="paymentCardBrand">No payment method</div>
+                            <div class="payment-card-number" id="paymentCardNumber">Add a card to continue</div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="updatePaymentBtn">Add Card</button>
+                    </div>
+                </div>
+                
+                <!-- Usage This Month -->
+                <div class="billing-section">
+                    <div class="billing-section-header">Usage This Month</div>
+                    <div class="billing-usage-grid">
+                        <div class="billing-usage-item">
+                            <div class="billing-usage-value" id="billingUsageCalls">0</div>
+                            <div class="billing-usage-label">Calls Made</div>
+                        </div>
+                        <div class="billing-usage-item">
+                            <div class="billing-usage-value" id="billingUsageLimit">1,000</div>
+                            <div class="billing-usage-label">Call Limit</div>
+                        </div>
+                        <div class="billing-usage-item">
+                            <div class="billing-usage-value" id="billingUsagePercent">0%</div>
+                            <div class="billing-usage-label">Used</div>
+                        </div>
+                    </div>
+                    <div class="billing-usage-bar">
+                        <div class="billing-usage-fill" id="billingUsageFill" style="width:0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Billing History -->
+                <div class="billing-section">
+                    <div class="billing-section-header">Billing History</div>
+                    <div class="billing-history-list" id="billingHistoryList">
+                        <div class="billing-history-empty">No billing history yet</div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="viewAllInvoicesBtn" style="margin-top:12px;">View All Invoices</button>
+                </div>
+                
+                <!-- Actions -->
+                <div class="billing-actions">
+                    <button class="btn btn-primary" id="manageBillingBtn">Manage Subscription</button>
+                    <button class="btn btn-secondary" id="downloadReceiptBtn">Download Receipt</button>
+                </div>
+                <p id="billingStatus" style="margin-top:12px;font-size:0.875rem;color:var(--text-secondary);"></p>
             </div>
             
             <!-- Danger Zone -->
@@ -3099,6 +3241,102 @@ function populateSettings() {
     document.getElementById('settingsCalendar').value = f['Google Calendar Email'] || '';
     if (f['Available Start']) document.getElementById('settingsStart').value = f['Available Start'];
     if (f['Available End']) document.getElementById('settingsEnd').value = f['Available End'];
+    
+    // Populate billing section
+    populateBilling(f);
+}
+
+function populateBilling(f) {
+    var plan = f['Monthly Plan'] || 'Starter';
+    var rate = parseFloat(f['Monthly Rate']) || 0;
+    var callLimit = parseInt(f['Call Limit']) || getPlanLimit(plan);
+    var callsUsed = parseInt(f['Calls This Month']) || 0;
+    var status = f['Status'] || 'Active';
+    var paymentDate = f['Payment Date'] || null;
+    
+    // Plan info
+    document.getElementById('billingPlanName').textContent = plan;
+    document.getElementById('billingPlanPrice').textContent = rate > 0 ? '$' + rate.toFixed(0) : 'Free';
+    document.getElementById('billingCallLimit').textContent = callLimit.toLocaleString() + ' calls/mo';
+    
+    // Status badge
+    var statusEl = document.getElementById('billingPlanStatus');
+    statusEl.textContent = status;
+    statusEl.className = 'billing-status-badge ' + status.toLowerCase();
+    
+    // Next billing date
+    var nextBillingEl = document.getElementById('billingNextDate');
+    if (paymentDate) {
+        var nextDate = new Date(paymentDate);
+        nextDate.setMonth(nextDate.getMonth() + 1);
+        nextBillingEl.textContent = nextDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } else {
+        nextBillingEl.textContent = rate > 0 ? 'Contact support' : 'N/A (Free plan)';
+    }
+    
+    // Usage stats
+    document.getElementById('billingUsageCalls').textContent = callsUsed.toLocaleString();
+    document.getElementById('billingUsageLimit').textContent = callLimit.toLocaleString();
+    var usagePercent = callLimit > 0 ? Math.round((callsUsed / callLimit) * 100) : 0;
+    document.getElementById('billingUsagePercent').textContent = usagePercent + '%';
+    document.getElementById('billingUsageFill').style.width = Math.min(usagePercent, 100) + '%';
+    
+    // Change fill color if near/over limit
+    var fillEl = document.getElementById('billingUsageFill');
+    if (usagePercent >= 100) {
+        fillEl.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+    } else if (usagePercent >= 80) {
+        fillEl.style.background = 'linear-gradient(90deg, #f59e0b, #d97706)';
+    } else {
+        fillEl.style.background = 'linear-gradient(90deg, var(--accent), #8B5CF6)';
+    }
+    
+    // Payment card placeholder (would integrate with Stripe in production)
+    var cardBrand = f['Card Brand'] || null;
+    var cardLast4 = f['Card Last 4'] || null;
+    if (cardBrand && cardLast4) {
+        document.getElementById('paymentCardBrand').textContent = cardBrand;
+        document.getElementById('paymentCardNumber').textContent = '•••• •••• •••• ' + cardLast4;
+        document.getElementById('updatePaymentBtn').textContent = 'Update';
+    }
+    
+    // Upgrade button visibility
+    var upgradeBtn = document.getElementById('upgradePlanBtn');
+    if (plan === 'Enterprise' || plan === 'Professional') {
+        upgradeBtn.style.display = 'none';
+    } else {
+        upgradeBtn.style.display = 'inline-flex';
+        upgradeBtn.onclick = function() {
+            window.location.href = '/pricing';
+        };
+    }
+    
+    // Billing history (placeholder - would come from Stripe in production)
+    var historyList = document.getElementById('billingHistoryList');
+    if (rate > 0 && paymentDate) {
+        var historyItems = [];
+        var payDate = new Date(paymentDate);
+        for (var i = 0; i < 3; i++) {
+            var invoiceDate = new Date(payDate);
+            invoiceDate.setMonth(invoiceDate.getMonth() - i);
+            if (invoiceDate <= new Date()) {
+                historyItems.push({
+                    date: invoiceDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    amount: '$' + rate.toFixed(2),
+                    status: 'paid'
+                });
+            }
+        }
+        if (historyItems.length > 0) {
+            historyList.innerHTML = historyItems.map(function(item) {
+                return '<div class="billing-history-item">' +
+                    '<span class="billing-history-date">' + item.date + '</span>' +
+                    '<span class="billing-history-amount">' + item.amount + '</span>' +
+                    '<span class="billing-history-status ' + item.status + '">' + item.status.charAt(0).toUpperCase() + item.status.slice(1) + '</span>' +
+                '</div>';
+            }).join('');
+        }
+    }
 }
 
 async function fetchAllLeads() {
@@ -4594,24 +4832,48 @@ document.getElementById('settingsForm').addEventListener('submit', async functio
 
 document.getElementById('passwordForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    var currentPass = document.getElementById('currentPassword').value;
     var newPass = document.getElementById('newPassword').value;
     var confirmPass = document.getElementById('confirmNewPassword').value;
     var successEl = document.getElementById('passwordSuccess');
     var errorEl = document.getElementById('passwordError');
     var btn = document.getElementById('changePasswordBtn');
     successEl.textContent = ''; errorEl.textContent = '';
-    if (newPass !== confirmPass) { errorEl.textContent = 'Passwords do not match'; errorEl.classList.add('visible'); return; }
-    if (newPass.length < 8) { errorEl.textContent = 'Minimum 8 characters'; errorEl.classList.add('visible'); return; }
+    successEl.classList.remove('visible'); errorEl.classList.remove('visible');
+    
+    if (!currentPass) { errorEl.textContent = 'Please enter your current password'; errorEl.classList.add('visible'); return; }
+    if (newPass !== confirmPass) { errorEl.textContent = 'New passwords do not match'; errorEl.classList.add('visible'); return; }
+    if (newPass.length < 8) { errorEl.textContent = 'New password must be at least 8 characters'; errorEl.classList.add('visible'); return; }
+    if (currentPass === newPass) { errorEl.textContent = 'New password must be different from current password'; errorEl.classList.add('visible'); return; }
+    
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Updating...';
+    btn.innerHTML = '<span class="spinner"></span>Verifying...';
+    
     try {
+        // First verify current password by re-signing in
+        var verifyResult = await supabase.auth.signInWithPassword({
+            email: currentUserEmail,
+            password: currentPass
+        });
+        if (verifyResult.error) {
+            throw new Error('Current password is incorrect');
+        }
+        
+        btn.innerHTML = '<span class="spinner"></span>Updating...';
+        
+        // Now update to new password
         var result = await supabase.auth.updateUser({ password: newPass });
         if (result.error) throw result.error;
-        successEl.textContent = 'Password updated!';
+        
+        successEl.textContent = '✓ Password updated successfully!';
         successEl.classList.add('visible');
+        document.getElementById('currentPassword').value = '';
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmNewPassword').value = '';
-    } catch (err) { errorEl.textContent = err.message || 'Error'; errorEl.classList.add('visible'); }
+    } catch (err) { 
+        errorEl.textContent = err.message || 'Error updating password'; 
+        errorEl.classList.add('visible'); 
+    }
     btn.disabled = false;
     btn.textContent = 'Update Password';
 });
@@ -5761,7 +6023,7 @@ document.getElementById('manageBillingBtn').addEventListener('click', async func
     
     try {
         // For now, link to mailto - you can replace with Stripe customer portal URL
-        window.open('mailto:info@prioai.ca?subject=Billing Inquiry - ' + encodeURIComponent(currentUserEmail), '_blank');
+        window.open('mailto:info@prioai.ca?subject=Subscription Management - ' + encodeURIComponent(currentUserEmail), '_blank');
         statusEl.textContent = 'Opening email client...';
     } catch (err) {
         statusEl.style.color = 'var(--danger)';
@@ -5770,6 +6032,42 @@ document.getElementById('manageBillingBtn').addEventListener('click', async func
     
     btn.disabled = false;
     btn.textContent = 'Manage Subscription';
+});
+
+// Update Payment Method button
+document.getElementById('updatePaymentBtn').addEventListener('click', function() {
+    var statusEl = document.getElementById('billingStatus');
+    // In production, this would open Stripe's payment method update flow
+    window.open('mailto:info@prioai.ca?subject=Update Payment Method - ' + encodeURIComponent(currentUserEmail), '_blank');
+    statusEl.textContent = 'Contact support to update your payment method.';
+    statusEl.style.color = 'var(--text-secondary)';
+});
+
+// View All Invoices button
+document.getElementById('viewAllInvoicesBtn').addEventListener('click', function() {
+    var statusEl = document.getElementById('billingStatus');
+    // In production, this would open Stripe's invoice portal
+    window.open('mailto:info@prioai.ca?subject=Invoice Request - ' + encodeURIComponent(currentUserEmail), '_blank');
+    statusEl.textContent = 'Contact support for detailed invoices.';
+    statusEl.style.color = 'var(--text-secondary)';
+});
+
+// Download Receipt button
+document.getElementById('downloadReceiptBtn').addEventListener('click', function() {
+    var statusEl = document.getElementById('billingStatus');
+    var plan = currentUserRecord?.fields['Monthly Plan'] || 'Starter';
+    var rate = parseFloat(currentUserRecord?.fields['Monthly Rate']) || 0;
+    
+    if (rate === 0) {
+        statusEl.textContent = 'No receipts available for free plan.';
+        statusEl.style.color = 'var(--text-muted)';
+        return;
+    }
+    
+    // In production, this would generate/download an actual receipt
+    window.open('mailto:info@prioai.ca?subject=Receipt Request - ' + encodeURIComponent(currentUserEmail), '_blank');
+    statusEl.textContent = 'Contact support to receive your receipt.';
+    statusEl.style.color = 'var(--text-secondary)';
 });
 
 // === PRIO LEADS FUNCTIONALITY ===
