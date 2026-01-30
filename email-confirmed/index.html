@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Prio AI - Email confirmed successfully.">
+    <title>Email Confirmed | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/icon_black.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body class="auth-page">
+<nav>
+    <div class="container-lg">
+        <a href="/" class="logo">
+            <img src="/assets/logo_black.png" alt="Prio AI" class="logo-img logo-light">
+            <img src="/assets/logo_white.png" alt="Prio AI" class="logo-img logo-dark">
+        </a>
+        <ul class="nav-links">
+            <li><a href="/#solution">Solution</a></li>
+            <li><a href="/#how-it-works">How It Works</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/#faq">FAQ</a></li>
+        </ul>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle">
+                <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+    <a href="/#solution">Solution</a>
+    <a href="/#how-it-works">How It Works</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/login/" class="btn btn-secondary">Log In</a>
+    <a href="/signup/" class="btn btn-primary">Sign Up</a>
+</div>
+
+    <div class="auth-content">
+        <div class="auth-card text-center">
+            <!-- Success Checkmark -->
+            <div style="width:80px;height:80px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            
+            <h1>Email Confirmed!</h1>
+            <p class="subtitle" style="margin-bottom:32px;">
+                Your email has been verified successfully.<br>
+                You're ready to complete your account setup.
+            </p>
+            
+            <a href="/onboarding/" class="btn btn-primary btn-large btn-block">
+                Continue to Setup →
+            </a>
+            
+            <p class="form-footer" style="margin-top:24px;">
+                Having trouble? <a href="/contact/">Contact support</a>
+            </p>
+        </div>
+    </div>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">
+                    <img src="/assets/logo_black.png" alt="Prio AI" class="logo-img logo-light">
+                    <img src="/assets/logo_white.png" alt="Prio AI" class="logo-img logo-dark">
+                </div>
+                <div class="footer-links">
+                    <a href="/terms/">Terms of Service</a>
+                    <a href="/privacy/">Privacy Policy</a>
+                    <a href="/contact/">Contact Us</a>
+                </div>
+            </div>
+            <div class="footer-info">
+                <a href="mailto:info@prioai.ca">info@prioai.ca</a>
+                <p>&copy; 2025 Prio AI. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
+var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Handle the email confirmation - Supabase passes tokens in URL hash
+// This establishes the session so user stays logged in
+supabase.auth.getSession().then(function(result) {
+    if (result.data.session) {
+        console.log('Session established:', result.data.session.user.email);
+    }
+});
+
+// Also listen for auth state changes (handles the token exchange)
+supabase.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_IN' && session) {
+        console.log('User signed in:', session.user.email);
+    }
+});
+</script>
+
+<script>
+// Theme toggle
+var html = document.documentElement;
+var savedTheme = localStorage.getItem('theme') || 'dark';
+html.setAttribute('data-theme', savedTheme);
+document.getElementById('themeToggle').addEventListener('click', function() {
+    var newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+// Mobile menu
+var mobileMenuBtn = document.getElementById('mobileMenuBtn');
+var mobileMenu = document.getElementById('mobileMenu');
+var mobileMenuClose = document.getElementById('mobileMenuClose');
+if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', function() { mobileMenu.classList.add('active'); document.body.style.overflow = 'hidden'; });
+    if (mobileMenuClose) mobileMenuClose.addEventListener('click', function() { mobileMenu.classList.remove('active'); document.body.style.overflow = ''; });
+    mobileMenu.querySelectorAll('a').forEach(function(link) { link.addEventListener('click', function() { mobileMenu.classList.remove('active'); document.body.style.overflow = ''; }); });
+}
+</script>
+</body>
+</html>
