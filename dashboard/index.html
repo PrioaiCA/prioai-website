@@ -2867,38 +2867,38 @@ document.getElementById('cropSave').addEventListener('click', async function() {
     try {
         // Get cropped canvas at 200x200 for crisp display
         var canvas = cropper.getCroppedCanvas({ width: 200, height: 200, imageSmoothingQuality: 'high' });
-        var base64 = canvas.toDataURL('image/jpeg', 0.9);
+        var blob = await new Promise(function(resolve) { canvas.toBlob(resolve, 'image/jpeg', 0.9); });
         
         // Upload to Supabase Storage
         var userId = (await supabase.auth.getUser()).data.user.id;
-        var fileName = 'avatar-' + userId + '-' + Date.now() + '.jpg';
+        var fileName = userId + '/avatar-' + Date.now() + '.jpg';
         
-        // Convert base64 to blob
-        var blob = await fetch(base64).then(r => r.blob());
-        
-        // Upload to storage
-        var uploadResult = await supabase.storage.from('avatars').upload(fileName, blob, {
-            contentType: 'image/jpeg',
-            upsert: true
-        });
-        
-        if (uploadResult.error) {
-            // Fallback: store smaller base64 directly if storage fails
-            console.warn('Storage upload failed, using base64 fallback:', uploadResult.error);
-            var result = await supabase.auth.updateUser({ data: { profile_picture: base64 } });
-            if (!result.error) updateProfilePicture(base64);
-        } else {
-            // Get public URL
-            var publicUrl = supabase.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
-            var result = await supabase.auth.updateUser({ data: { profile_picture: publicUrl } });
-            if (!result.error) updateProfilePicture(publicUrl);
+        // Delete old avatar if exists
+        var oldPic = (await supabase.auth.getUser()).data.user.user_metadata?.profile_picture;
+        if (oldPic && oldPic.includes('avatars')) {
+            var oldPath = oldPic.split('/avatars/')[1];
+            if (oldPath) await supabase.storage.from('avatars').remove([oldPath]);
         }
         
+        // Upload new avatar
+        var uploadResult = await supabase.storage.from('avatars').upload(fileName, blob, {
+            contentType: 'image/jpeg',
+            cacheControl: '3600'
+        });
+        
+        if (uploadResult.error) throw uploadResult.error;
+        
+        // Get public URL and save to user metadata
+        var publicUrl = supabase.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
+        var result = await supabase.auth.updateUser({ data: { profile_picture: publicUrl } });
+        if (result.error) throw result.error;
+        
+        updateProfilePicture(publicUrl);
         closeCropModal();
         showToast('Profile photo updated!', 'success');
     } catch (err) {
         console.error(err);
-        showToast('Failed to save photo', 'error');
+        showToast('Failed to save photo: ' + (err.message || 'Unknown error'), 'error');
     }
     
     btn.disabled = false;
