@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <style>
         .dashboard .container { max-width: 1500px; padding: 32px 48px; }
         .dashboard nav .container-lg { max-width: 1500px; padding: 0 48px; }
@@ -677,6 +678,17 @@
         .help-quick-link-text { font-size: 0.875rem; font-weight: 500; }
         
         .col-hidden { display: none !important; }
+        
+        /* Crop Modal */
+        .crop-modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
+        .crop-modal.active { display: flex; }
+        .crop-modal-content { background: var(--bg-secondary); border-radius: 16px; padding: 24px; max-width: 500px; width: 90%; }
+        .crop-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .crop-modal-header h3 { font-size: 1.125rem; font-weight: 600; }
+        .crop-modal-close { background: none; border: none; font-size: 24px; color: var(--text-secondary); cursor: pointer; }
+        .crop-container { width: 100%; height: 300px; background: var(--bg-tertiary); border-radius: 8px; overflow: hidden; }
+        .crop-container img { max-width: 100%; display: block; }
+        .crop-actions { display: flex; gap: 12px; margin-top: 16px; justify-content: flex-end; }
     </style>
 </head>
 <body>
@@ -2531,6 +2543,24 @@
     </div>
 </footer>
 
+<!-- Crop Modal -->
+<div class="crop-modal" id="cropModal">
+    <div class="crop-modal-content">
+        <div class="crop-modal-header">
+            <h3>Adjust Photo</h3>
+            <button class="crop-modal-close" id="cropModalClose">&times;</button>
+        </div>
+        <div class="crop-container">
+            <img id="cropImage" src="" alt="Crop preview">
+        </div>
+        <div class="crop-actions">
+            <button class="btn btn-secondary" id="cropCancel">Cancel</button>
+            <button class="btn btn-primary" id="cropSave">Save Photo</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
@@ -2785,25 +2815,94 @@ document.querySelectorAll('.feedback-type').forEach(function(type) {
     });
 });
 
-// Profile picture
+// Profile picture with cropping
+var cropper = null;
+var cropModal = document.getElementById('cropModal');
+var cropImage = document.getElementById('cropImage');
+
 document.getElementById('profileUploadBtn').addEventListener('click', function() {
     document.getElementById('profilePicInput').click();
 });
 
-document.getElementById('profilePicInput').addEventListener('change', async function() {
+document.getElementById('profilePicInput').addEventListener('change', function() {
     if (this.files && this.files[0]) {
         var file = this.files[0];
         if (file.size > 10 * 1024 * 1024) { showToast('Image too large. Max 10MB.', 'error'); return; }
         var reader = new FileReader();
-        reader.onload = async function(e) {
-            var base64 = e.target.result;
-            try {
-                var result = await supabase.auth.updateUser({ data: { profile_picture: base64 } });
-                if (!result.error) updateProfilePicture(base64);
-            } catch (err) { console.error(err); }
+        reader.onload = function(e) {
+            cropImage.src = e.target.result;
+            cropModal.classList.add('active');
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxResizable: false,
+                cropBoxMovable: false,
+                guides: false,
+                center: true,
+                background: false
+            });
         };
         reader.readAsDataURL(file);
     }
+});
+
+document.getElementById('cropModalClose').addEventListener('click', closeCropModal);
+document.getElementById('cropCancel').addEventListener('click', closeCropModal);
+
+function closeCropModal() {
+    cropModal.classList.remove('active');
+    if (cropper) { cropper.destroy(); cropper = null; }
+    document.getElementById('profilePicInput').value = '';
+}
+
+document.getElementById('cropSave').addEventListener('click', async function() {
+    if (!cropper) return;
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    
+    try {
+        // Get cropped canvas at 200x200 for crisp display
+        var canvas = cropper.getCroppedCanvas({ width: 200, height: 200, imageSmoothingQuality: 'high' });
+        var base64 = canvas.toDataURL('image/jpeg', 0.9);
+        
+        // Upload to Supabase Storage
+        var userId = (await supabase.auth.getUser()).data.user.id;
+        var fileName = 'avatar-' + userId + '-' + Date.now() + '.jpg';
+        
+        // Convert base64 to blob
+        var blob = await fetch(base64).then(r => r.blob());
+        
+        // Upload to storage
+        var uploadResult = await supabase.storage.from('avatars').upload(fileName, blob, {
+            contentType: 'image/jpeg',
+            upsert: true
+        });
+        
+        if (uploadResult.error) {
+            // Fallback: store smaller base64 directly if storage fails
+            console.warn('Storage upload failed, using base64 fallback:', uploadResult.error);
+            var result = await supabase.auth.updateUser({ data: { profile_picture: base64 } });
+            if (!result.error) updateProfilePicture(base64);
+        } else {
+            // Get public URL
+            var publicUrl = supabase.storage.from('avatars').getPublicUrl(fileName).data.publicUrl;
+            var result = await supabase.auth.updateUser({ data: { profile_picture: publicUrl } });
+            if (!result.error) updateProfilePicture(publicUrl);
+        }
+        
+        closeCropModal();
+        showToast('Profile photo updated!', 'success');
+    } catch (err) {
+        console.error(err);
+        showToast('Failed to save photo', 'error');
+    }
+    
+    btn.disabled = false;
+    btn.textContent = 'Save Photo';
 });
 
 document.getElementById('profileRemoveBtn').addEventListener('click', async function() {
