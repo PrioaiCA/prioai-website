@@ -12,15 +12,18 @@
     <link rel="stylesheet" href="/assets/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <style>
+        /* Override accent color to brand green */
+        :root { --accent: rgb(52,211,153) !important; --accent-hover: rgb(45,190,135) !important; }
+        
         .dashboard .container { max-width: 1500px; padding: 32px 48px; }
         .dashboard nav .container-lg { max-width: 1500px; padding: 0 48px; }
         
         .dashboard-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; }
-        .dashboard-loading .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .dashboard-loading .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: rgb(52,211,153); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .dashboard-content { display: none; }
         .dashboard-content.loaded { display: block; }
         .section-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 12px; }
-        .section-loading .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .section-loading .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: rgb(52,211,153); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .section-loading-text { font-size: 0.875rem; color: var(--text-muted); }
         .tab-content.loading .table-container { display: none; }
         .tab-content.loading .section-loading { display: flex; }
@@ -30,7 +33,7 @@
         .tab-spacer { flex: 1; }
         .dashboard-tab { background: none; border: none; padding: 10px 20px; font-size: 0.875rem; color: var(--text-secondary); cursor: pointer; border-radius: 8px; transition: all 0.2s; font-family: inherit; font-weight: 500; white-space: nowrap; }
         .dashboard-tab:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
-        .dashboard-tab.active { background: var(--accent); color: white; box-shadow: 0 2px 8px rgba(79, 140, 255, 0.3); }
+        .dashboard-tab.active { background: rgb(52,211,153); color: #000; font-weight: 600; box-shadow: 0 2px 8px rgba(52,211,153,0.3); }
         .dashboard-tab-dropdown { position: relative; }
         .dashboard-tab-more { display: flex; align-items: center; gap: 4px; }
         .dropdown-arrow { font-size: 0.7rem; transition: transform 0.2s; }
@@ -39,8 +42,8 @@
         .dashboard-tab-dropdown.open .dropdown-menu { display: block; }
         .dropdown-item { display: block; width: 100%; padding: 10px 14px; text-align: left; background: none; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 0.875rem; font-family: inherit; transition: all 0.2s; }
         .dropdown-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
-        .dropdown-item.active { background: var(--accent); color: white; }
-        .leads-count-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: white; font-size: 0.875rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-left: 8px; min-width: 32px; }
+        .dropdown-item.active { background: rgb(52,211,153); color: #000; }
+        .leads-count-badge { display: inline-flex; align-items: center; justify-content: center; background: rgb(52,211,153); color: #000; font-size: 0.875rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-left: 8px; min-width: 32px; }
         .leads-count-badge .badge-spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
         .sortable-header { cursor: pointer; user-select: none; }
         .sortable-header:hover { color: var(--accent); }
@@ -114,14 +117,14 @@
         .calls-usage .usage-label { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
         .calls-usage .usage-text { font-size: 0.875rem; font-weight: 600; }
         .calls-usage .usage-bar { height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; margin-top: 2px; }
-        .calls-usage .usage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #8B5CF6); border-radius: 3px; transition: width 0.3s; }
+        .calls-usage .usage-bar-fill { height: 100%; background: linear-gradient(90deg, rgb(52,211,153), rgb(45,190,135)); border-radius: 3px; transition: width 0.3s; }
         .calls-usage.warning .usage-bar-fill { background: linear-gradient(90deg, #F59E0B, #EF4444); }
         
         /* Analytics button */
-        .analytics-btn { display: flex; flex-direction: column; gap: 2px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--accent); border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: all 0.2s; text-decoration: none; }
-        .analytics-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .analytics-btn { display: flex; flex-direction: column; gap: 2px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .analytics-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(52,211,153,0.3); border-color: rgb(52,211,153); }
         .analytics-btn .btn-label { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
-        .analytics-btn .btn-value { font-size: 1.25rem; font-weight: 700; color: var(--accent); font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
+        .analytics-btn .btn-value { font-size: 1.25rem; font-weight: 700; color: rgb(52,211,153); font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
         .analytics-btn .btn-value svg { width: 16px; height: 16px; }
         
         /* Section header */
@@ -297,8 +300,8 @@
         .btn-edit-inline { background: none; border: none; cursor: pointer; font-size: 0.75rem; padding: 2px 4px; opacity: 0.6; transition: opacity 0.2s; }
         .btn-edit-inline:hover { opacity: 1; }
         .btn-sm { padding: 6px 12px; font-size: 0.8125rem; }
-        .prio-tab { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2)) !important; border: 1px solid rgba(245, 158, 11, 0.3) !important; }
-        .prio-tab.active { background: linear-gradient(135deg, #F59E0B, #D97706) !important; color: white !important; border-color: #F59E0B !important; }
+        .prio-tab { background: rgba(52,211,153,0.15) !important; border: 1px solid rgba(52,211,153,0.3) !important; }
+        .prio-tab.active { background: rgb(52,211,153) !important; color: #000 !important; border-color: rgb(52,211,153) !important; font-weight: 600 !important; }
         .prio-table th:nth-child(1), .prio-table td:nth-child(1) { min-width: 100px; font-weight: 600; } /* First Name */
         .prio-table th:nth-child(2), .prio-table td:nth-child(2) { min-width: 100px; } /* Last Name */
         .prio-table th:nth-child(3), .prio-table td:nth-child(3) { min-width: 140px; } /* Phone */
