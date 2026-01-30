@@ -152,11 +152,11 @@
         .leads-table .col-notes { white-space: normal; min-width: 150px; max-width: 250px; }
         
         /* Edit Lead button */
-        .btn-edit-lead { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); padding: 8px 16px; border-radius: 8px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-edit-lead:hover { background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2)); border-color: var(--accent); transform: translateY(-1px); }
+        .btn-edit-lead { background: rgba(52,211,153,0.1); color: rgb(52,211,153); border: 1px solid rgba(52,211,153,0.3); padding: 8px 16px; border-radius: 8px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-edit-lead:hover { background: rgba(52,211,153,0.2); border-color: rgb(52,211,153); transform: translateY(-1px); }
         .btn-edit-lead svg { width: 14px; height: 14px; }
         .search-result-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .search-result-item:hover { border-color: var(--accent); background: rgba(79, 140, 255, 0.05); }
+        .search-result-item:hover { border-color: rgb(52,211,153); background: rgba(52,211,153,0.05); }
         .search-result-item .lead-info { display: flex; flex-direction: column; gap: 4px; }
         .search-result-item .lead-name { font-weight: 600; font-size: 1rem; }
         .search-result-item .lead-phone { color: var(--text-secondary); font-size: 0.875rem; }
@@ -708,18 +708,18 @@
         }
         .help-quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
         .help-quick-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
-        .help-quick-link:hover { border-color: var(--accent); background: rgba(59,130,246,0.05); transform: translateY(-2px); }
+        .help-quick-link:hover { border-color: rgb(52,211,153); background: rgba(52,211,153,0.05); transform: translateY(-2px); }
         .help-quick-link-icon { font-size: 1.25rem; }
         .help-quick-link-text { font-size: 0.875rem; font-weight: 500; }
         
         .col-hidden { display: none !important; }
         
         /* Nav Tabs */
-        .nav-tabs { display: none; gap: 4px; }
+        .nav-tabs { display: none; gap: 4px; align-items: center; }
         @media (min-width: 1024px) { .nav-tabs { display: flex; } }
-        .nav-tab { background: none; border: none; padding: 8px 14px; font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
-        .nav-tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
-        .nav-tab.active { color: #000; background: var(--accent); }
+        .nav-tab { background: none; border: none; padding: 10px 16px; font-size: 0.8125rem; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; border-radius: 8px; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+        .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-tab.active { color: #000; background: rgb(52,211,153); font-weight: 600; }
         
         #userDisplayName { color: var(--text-primary) !important; }
         .user-menu-btn { color: var(--text-primary); }
