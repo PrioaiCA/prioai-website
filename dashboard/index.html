@@ -2801,27 +2801,7 @@
 <script>
 var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
 var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
-// Clear bloated auth token (likely from base64 profile pic in metadata)
-try {
-    var authKey = 'sb-bflmikgoafdffezrfpgb-auth-token';
-    localStorage.removeItem(authKey);
-    for (var i = localStorage.length - 1; i >= 0; i--) {
-        var k = localStorage.key(i);
-        if (k && k.startsWith('prio_')) localStorage.removeItem(k);
-    }
-} catch(e) {}
 var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-// Clear profile picture from user metadata if it exists (it bloats the token)
-(async function() {
-    try {
-        var sess = await supabase.auth.getSession();
-        if (sess.data.session?.user?.user_metadata?.profile_picture) {
-            await supabase.auth.updateUser({ data: { profile_picture: null } });
-            localStorage.removeItem(authKey);
-            location.reload();
-        }
-    } catch(e) {}
-})();
 
 var AIRTABLE_TOKEN = 'pat7G7IDgOiR6rbLQ.3a9db22c5170b90305b7504a63e6933bd54011b028ac384f3d29e9ad7bcdc0c3';
 var AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
