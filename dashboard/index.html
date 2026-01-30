@@ -672,6 +672,34 @@
         .help-no-results { text-align: center; padding: 48px 24px; color: var(--text-muted); }
         .help-no-results svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5; }
         .help-highlight { background: rgba(245,158,11,0.3); padding: 0 2px; border-radius: 2px; }
+        
+        /* Need More Help Section */
+        .help-support-section { margin-top: 32px; background: linear-gradient(135deg, var(--bg-secondary), rgba(59,130,246,0.08)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+        .help-support-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .help-support-icon { font-size: 2.5rem; }
+        .help-support-header h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 4px; }
+        .help-support-header p { font-size: 0.875rem; color: var(--text-secondary); }
+        .help-support-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .help-support-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; }
+        .help-support-btn svg { width: 18px; height: 18px; }
+        .help-support-btn.primary { background: var(--accent); color: white; }
+        .help-support-btn.primary:hover { background: #2563EB; transform: translateY(-2px); }
+        .help-support-btn.secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); }
+        .help-support-btn.secondary:hover { border-color: var(--accent); background: rgba(59,130,246,0.1); }
+        .help-support-note { font-size: 0.75rem; color: var(--text-muted); }
+        
+        /* Keyboard Shortcuts */
+        .help-shortcuts { margin-top: 24px; padding: 20px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; }
+        .help-shortcuts h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; }
+        .help-shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .help-shortcut { display: flex; align-items: center; gap: 10px; font-size: 0.8125rem; color: var(--text-secondary); }
+        .help-shortcut kbd { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-family: monospace; font-size: 0.75rem; color: var(--text-primary); box-shadow: 0 2px 0 var(--border); }
+        
+        @media (max-width: 600px) {
+            .help-support-actions { flex-direction: column; }
+            .help-support-btn { justify-content: center; }
+            .help-shortcuts-grid { grid-template-columns: 1fr; }
+        }
         .help-quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
         .help-quick-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
         .help-quick-link:hover { border-color: var(--accent); background: rgba(59,130,246,0.05); transform: translateY(-2px); }
@@ -2399,6 +2427,51 @@
                         </div>
                     </div>
                     
+                </div>
+                
+                <!-- Need More Help Section -->
+                <div class="help-support-section">
+                    <div class="help-support-header">
+                        <span class="help-support-icon">💬</span>
+                        <div>
+                            <h4>Still need help?</h4>
+                            <p>Our team is here to support you</p>
+                        </div>
+                    </div>
+                    <div class="help-support-actions">
+                        <a href="mailto:info@prioai.ca?subject=Support Request" class="help-support-btn primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            Email Support
+                        </a>
+                        <button class="help-support-btn secondary" onclick="document.querySelector('[data-tab=feedback]').click()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            Send Feedback
+                        </button>
+                    </div>
+                    <p class="help-support-note">Response time: Usually within 24 hours on business days</p>
+                </div>
+                
+                <!-- Keyboard Shortcuts -->
+                <div class="help-shortcuts">
+                    <h4>⌨️ Keyboard Shortcuts</h4>
+                    <div class="help-shortcuts-grid">
+                        <div class="help-shortcut">
+                            <kbd>/</kbd>
+                            <span>Quick search leads</span>
+                        </div>
+                        <div class="help-shortcut">
+                            <kbd>Esc</kbd>
+                            <span>Close modals</span>
+                        </div>
+                        <div class="help-shortcut">
+                            <kbd>←</kbd> <kbd>→</kbd>
+                            <span>Navigate leads</span>
+                        </div>
+                        <div class="help-shortcut">
+                            <kbd>?</kbd>
+                            <span>Open help</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -5506,6 +5579,25 @@ document.getElementById('helpSearchInput').addEventListener('input', function() 
     } else {
         noResults.style.display = 'block';
         searchTermSpan.textContent = query;
+    }
+});
+
+// Keyboard shortcut: ? to open help tab
+document.addEventListener('keydown', function(e) {
+    // Don't trigger if user is typing in an input field
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+    
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        var helpTab = document.querySelector('[data-tab="help"]');
+        if (helpTab) {
+            helpTab.click();
+            // Focus the search input after a brief delay
+            setTimeout(function() {
+                var searchInput = document.getElementById('helpSearchInput');
+                if (searchInput) searchInput.focus();
+            }, 100);
+        }
     }
 });
 
