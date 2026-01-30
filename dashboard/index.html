@@ -25,7 +25,8 @@
         .tab-content.loading .table-container { display: none; }
         .tab-content.loading .section-loading { display: flex; }
         .tab-content:not(.loading) .section-loading { display: none; }
-        .dashboard-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg-secondary); padding: 6px; border-radius: 12px; flex-wrap: wrap; }
+        .dashboard-tabs { display: none; gap: 4px; margin-bottom: 24px; background: var(--bg-secondary); padding: 6px; border-radius: 12px; flex-wrap: wrap; }
+        @media (max-width: 1023px) { .dashboard-tabs { display: flex; } }
         .tab-spacer { flex: 1; }
         .dashboard-tab { background: none; border: none; padding: 10px 20px; font-size: 0.875rem; color: var(--text-secondary); cursor: pointer; border-radius: 8px; transition: all 0.2s; font-family: inherit; font-weight: 500; white-space: nowrap; }
         .dashboard-tab:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
@@ -679,6 +680,19 @@
         
         .col-hidden { display: none !important; }
         
+        /* Nav Tabs */
+        .nav-tabs { display: none; gap: 4px; }
+        @media (min-width: 1024px) { .nav-tabs { display: flex; } }
+        .nav-tab { background: none; border: none; padding: 8px 14px; font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+        .nav-tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+        .nav-tab.active { color: #000; background: var(--accent); }
+        
+        #userDisplayName { color: var(--text-primary) !important; }
+        .user-menu-btn { color: var(--text-primary); }
+        
+        .mobile-menu-divider { height: 1px; background: var(--border); margin: 12px 0; }
+        .mobile-nav-tab { display: block; padding: 12px 0; font-size: 1rem; }
+        
         /* Crop Modal */
         .crop-modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
         .crop-modal.active { display: flex; }
@@ -698,12 +712,14 @@
             <img src="/assets/logo_black.png" alt="Prio AI" class="logo-img logo-light">
             <img src="/assets/logo_white.png" alt="Prio AI" class="logo-img logo-dark">
         </a>
-        <ul class="nav-links">
-            <li><a href="/#solution">Solution</a></li>
-            <li><a href="/#how-it-works">How It Works</a></li>
-            <li><a href="/#pricing">Pricing</a></li>
-            <li><a href="/#faq">FAQ</a></li>
-        </ul>
+        <div class="nav-tabs" id="navTabs">
+            <button class="nav-tab active" data-tab="prio">📊 PRIO</button>
+            <button class="nav-tab" data-tab="leads">📋 Prospects</button>
+            <button class="nav-tab" data-tab="pipeline">🤖 AI Pipeline</button>
+            <button class="nav-tab" data-tab="search">🔍 Search</button>
+            <button class="nav-tab" data-tab="analytics">📈 Analytics</button>
+            <button class="nav-tab" data-tab="upload">📥 Import Leads</button>
+        </div>
         <div class="nav-right">
             <button class="theme-toggle" id="themeToggle">
                 <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -715,9 +731,10 @@
                     <span id="userDisplayName">Account</span>
                 </button>
                 <div class="user-dropdown" id="userDropdown">
-                    <a href="/dashboard/">Dashboard</a>
-                    <a href="#" id="settingsLink">Profile</a>
+                    <a href="#" id="settingsLink">👤 Profile</a>
+                    <a href="#" id="billingLink">💳 Billing</a>
                     <a href="#" id="feedbackLink">💬 Feedback</a>
+                    <a href="#" id="helpLink">❓ Help</a>
                     <div class="divider"></div>
                     <button class="logout" id="logoutBtn">Log Out</button>
                 </div>
@@ -729,11 +746,15 @@
 
 <div class="mobile-menu" id="mobileMenu">
     <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
-    <a href="/#solution">Solution</a>
-    <a href="/#how-it-works">How It Works</a>
-    <a href="/#pricing">Pricing</a>
-    <a href="/#faq">FAQ</a>
-    <a href="/dashboard/" class="btn btn-primary">Dashboard</a>
+    <a href="#" class="mobile-nav-tab" data-tab="prio">📊 PRIO</a>
+    <a href="#" class="mobile-nav-tab" data-tab="leads">📋 Prospects</a>
+    <a href="#" class="mobile-nav-tab" data-tab="pipeline">🤖 AI Pipeline</a>
+    <a href="#" class="mobile-nav-tab" data-tab="search">🔍 Search</a>
+    <a href="#" class="mobile-nav-tab" data-tab="analytics">📈 Analytics</a>
+    <a href="#" class="mobile-nav-tab" data-tab="upload">📥 Import Leads</a>
+    <div class="mobile-menu-divider"></div>
+    <a href="#" class="mobile-nav-tab" data-tab="profile">👤 Profile</a>
+    <a href="#" class="mobile-nav-tab" data-tab="help">❓ Help</a>
     <button class="btn btn-secondary" id="mobileLogoutBtn">Log Out</button>
 </div>
 
@@ -2759,13 +2780,21 @@ function handleHashChange() {
 // Listen for hash changes (back/forward buttons)
 window.addEventListener('hashchange', handleHashChange);
 
-// Tab navigation - main tabs
-document.querySelectorAll('.dashboard-tab[data-tab]').forEach(function(tab) {
-    tab.addEventListener('click', function() {
+// Tab navigation - main tabs (both dashboard tabs and nav tabs)
+document.querySelectorAll('.dashboard-tab[data-tab], .nav-tab[data-tab], .mobile-nav-tab[data-tab]').forEach(function(tab) {
+    tab.addEventListener('click', function(e) {
+        e.preventDefault();
         var tabId = this.dataset.tab;
         if (!tabId) return;
         window.location.hash = tabId;
         switchToTab(tabId);
+        // Close mobile menu if open
+        document.getElementById('mobileMenu').classList.remove('active');
+        document.body.style.overflow = '';
+        // Update nav tab active state
+        document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+        var activeNavTab = document.querySelector('.nav-tab[data-tab="' + tabId + '"]');
+        if (activeNavTab) activeNavTab.classList.add('active');
     });
 });
 
@@ -2786,6 +2815,21 @@ document.getElementById('feedbackLink').addEventListener('click', function(e) {
     window.location.hash = 'feedback';
     switchToTab('feedback');
     document.getElementById('userDropdown').classList.remove('active');
+});
+
+document.getElementById('helpLink').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.location.hash = 'help';
+    switchToTab('help');
+    document.getElementById('userDropdown').classList.remove('active');
+});
+
+document.getElementById('billingLink').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.location.hash = 'profile';
+    switchToTab('profile');
+    document.getElementById('userDropdown').classList.remove('active');
+    // TODO: scroll to billing section or add billing tab
 });
 
 // Column toggle
