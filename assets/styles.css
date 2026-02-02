@@ -367,6 +367,7 @@ nav > .container-lg {
     padding: var(--space-2);
     border-radius: var(--radius-md);
     transition: background var(--transition-fast);
+    color: var(--text-primary);
 }
 
 .user-menu-btn:hover {
