@@ -114,7 +114,7 @@
 
     // Redirect if logged in
     supabase.auth.getSession().then(function(r) {
-        if (r.data.session) window.location.href = '/dashboard/';
+        if (r.data.session) window.location.href = 'https://dash.prioai.ca';
     });
 
     // Tab switching
@@ -143,7 +143,7 @@
                 password: document.getElementById('password').value
             });
             if (r.error) throw r.error;
-            window.location.href = '/dashboard/';
+            window.location.href = 'https://dash.prioai.ca';
         } catch (ex) {
             err.textContent = ex.message || 'Login failed';
             btn.disabled = false;
@@ -165,7 +165,7 @@
         try {
             var r = await supabase.auth.signInWithOtp({
                 email: document.getElementById('magicEmail').value,
-                options: { emailRedirectTo: window.location.origin + '/dashboard/' }
+                options: { emailRedirectTo: 'https://dash.prioai.ca' }
             });
             if (r.error) throw r.error;
             suc.textContent = '✓ Check your email for the sign-in link';
@@ -181,7 +181,7 @@
     document.getElementById('googleBtn').addEventListener('click', function() {
         supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: window.location.origin + '/dashboard/' }
+            options: { redirectTo: 'https://dash.prioai.ca' }
         });
     });
 

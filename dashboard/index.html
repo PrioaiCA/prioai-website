@@ -2806,11 +2806,29 @@ var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
 var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
 var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-var AIRTABLE_TOKEN = 'pat7G7IDgOiR6rbLQ.3a9db22c5170b90305b7504a63e6933bd54011b028ac384f3d29e9ad7bcdc0c3';
 var AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
 var AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
 var AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
 var AIRTABLE_CALLS_TABLE = 'tblvB5OpG0b5mVix3';
+
+// Secure Airtable proxy helpers
+async function fetchAirtable(path) {
+    var response = await fetch('/api/airtable?path=' + encodeURIComponent(path));
+    return response.json();
+}
+
+async function fetchAirtableWithStatus(path, options) {
+    var url = '/api/airtable?path=' + encodeURIComponent(path);
+    var fetchOptions = {
+        method: options.method || 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    };
+    if (options.body) {
+        fetchOptions.body = options.body;
+    }
+    var response = await fetch(url, fetchOptions);
+    return { ok: response.ok, status: response.status, json: function() { return response.json(); } };
+}
 var UPLOAD_WEBHOOK = 'https://n8n.prioai.ca/webhook/lead-file-upload';
 
 var currentUser = null;
@@ -3283,10 +3301,7 @@ function updateCallsUsage() {
 
 async function fetchUserData() {
     var filterFormula = encodeURIComponent('LOWER({Email})="' + currentUserEmail.toLowerCase() + '"');
-    var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula, {
-        headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN }
-    });
-    var data = await response.json();
+    var data = await fetchAirtable(AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + filterFormula);
     if (data.records && data.records.length > 0) {
         currentUserRecord = data.records[0];
         populateSettings();
@@ -3423,10 +3438,9 @@ async function fetchAllLeads() {
         var allRecords = [];
         var offset = null;
         do {
-            var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
-            if (offset) url += '&offset=' + offset;
-            var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-            var data = await response.json();
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&pageSize=100';
+            if (offset) path += '&offset=' + offset;
+            var data = await fetchAirtable(path);
             if (data.records) allRecords = allRecords.concat(data.records);
             offset = data.offset;
         } while (offset);
@@ -3478,12 +3492,11 @@ async function fetchDisplayedLeads() {
         
         // Paginate through all results
         do {
-            var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&sort[0][field]=Last%20Call%20Timestamp&sort[0][direction]=desc&pageSize=100';
-            if (offset) url += '&offset=' + offset;
-            
-            var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-            var data = await response.json();
-            
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula) + '&sort[0][field]=Last%20Call%20Timestamp&sort[0][direction]=desc&pageSize=100';
+            if (offset) path += '&offset=' + offset;
+
+            var data = await fetchAirtable(path);
+
             if (data.records) {
                 allRecords = allRecords.concat(data.records);
             }
@@ -3846,9 +3859,8 @@ async function takeOverLead(leadId, btn) {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>';
     try {
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Status': 'Callback' }})
         });
         if (response.ok) {
@@ -3885,15 +3897,12 @@ async function fetchAnalyticsCalls() {
     
     try {
         do {
-            var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + 
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE +
                 '?pageSize=100&sort[0][field]=Timestamp&sort[0][direction]=desc';
-            if (offset) url += '&offset=' + offset;
-            
-            var response = await fetch(url, {
-                headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN }
-            });
-            var data = await response.json();
-            
+            if (offset) path += '&offset=' + offset;
+
+            var data = await fetchAirtable(path);
+
             if (data.records) {
                 // Filter to only calls that belong to our leads
                 var matchingCalls = data.records.filter(function(call) {
@@ -4838,23 +4847,22 @@ async function confirmFollowup() {
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Sending...';
     try {
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Status': 'Follow Up', 'Next Call Date': scheduledDate.toISOString(), 'Client Notes': notesJson }})
         });
         if (response.ok) {
             btn.textContent = '✓ Sent!';
             btn.style.background = '#22C55E';
-            setTimeout(function() { 
-                closeFollowupModal(); 
-                closeModal(); 
-                btn.textContent = 'Send to AI'; 
-                btn.style.background = ''; 
-                btn.disabled = false; 
+            setTimeout(function() {
+                closeFollowupModal();
+                closeModal();
+                btn.textContent = 'Send to AI';
+                btn.style.background = '';
+                btn.disabled = false;
                 fetchAllLeads().then(function() {
                     renderPrio();
-                }); 
+                });
             }, 1500);
         } else throw new Error('Failed');
     } catch (err) { errorEl.textContent = 'Error. Please try again.'; btn.disabled = false; btn.textContent = 'Send to AI'; }
@@ -4894,9 +4902,8 @@ document.getElementById('settingsForm').addEventListener('submit', async functio
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Saving...';
     try {
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '/' + currentUserRecord.id, {
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '/' + currentUserRecord.id, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Phone': document.getElementById('settingsPhone').value, 'Google Calendar Email': document.getElementById('settingsCalendar').value, 'Available Start': document.getElementById('settingsStart').value, 'Available End': document.getElementById('settingsEnd').value }})
         });
         if (response.ok) { successEl.textContent = 'Saved!'; successEl.classList.add('visible'); }
@@ -5054,15 +5061,11 @@ document.getElementById('submitSingleLeadBtn').addEventListener('click', async f
         if (email) fields['Email'] = email;
         if (maxAttempts) fields['Max Attempts'] = parseInt(maxAttempts);
         
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE, {
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE, {
             method: 'POST',
-            headers: { 
-                'Authorization': 'Bearer ' + AIRTABLE_TOKEN,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ fields: fields })
         });
-        
+
         if (!response.ok) {
             var errData = await response.json();
             throw new Error(errData.error?.message || 'Failed to add lead');
@@ -5100,12 +5103,11 @@ var currentShareLeadId = null;
 // Fetch ALL active agents for name lookups
 async function fetchAllActiveAgents() {
     if (allActiveAgents.length > 0) return allActiveAgents;
-    
+
     try {
         var filterFormula = '{Status}="Active"';
-        var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula);
-        var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-        var data = await response.json();
+        var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula);
+        var data = await fetchAirtable(path);
         
         if (data.records) {
             allActiveAgents = data.records.map(function(r) {
@@ -5262,12 +5264,11 @@ document.getElementById('sharePopupConfirm').addEventListener('click', async fun
         var patchBody = { fields: { 'Shared With': [selectedAgentId] } };
         console.log('PATCH body:', JSON.stringify(patchBody));
         
-        var patchResponse = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
+        var patchResponse = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentShareLeadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify(patchBody)
         });
-        
+
         if (!patchResponse.ok) {
             var errorData = await patchResponse.json();
             console.error('Airtable PATCH error:', errorData);
@@ -5432,12 +5433,11 @@ document.addEventListener('click', function(e) {
 async function stopSharingLead(leadId) {
     try {
         // Clear the "Shared With" linked record field (not the lookup)
-        var patchResponse = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+        var patchResponse = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Shared With': [] } })
         });
-        
+
         if (!patchResponse.ok) {
             var errorData = await patchResponse.json();
             console.error('Airtable PATCH error:', errorData);
@@ -5710,10 +5710,9 @@ async function searchLead() {
             filterFormula = 'AND(FIND("' + email + '", LOWER(ARRAYJOIN({Client Email}))), OR(FIND("' + searchInput + '", LOWER({First Name})), FIND("' + searchInput + '", LOWER({Last Name}))))';
         }
         
-        var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula);
-        
-        var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-        var data = await response.json();
+        var path = AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '?filterByFormula=' + encodeURIComponent(filterFormula);
+
+        var data = await fetchAirtable(path);
         
         if (!data.records || data.records.length === 0) {
             emptyEl.style.display = 'block';
@@ -5848,9 +5847,8 @@ async function fetchCallHistory(leadId, phone, leadName, leadData) {
             var calls = [];
             for (var i = 0; i < callIds.length; i++) {
                 try {
-                    var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '/' + callIds[i];
-                    var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-                    var call = await response.json();
+                    var path = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '/' + callIds[i];
+                    var call = await fetchAirtable(path);
                     if (call.fields) calls.push(call);
                 } catch (e) { console.log('Error fetching call:', callIds[i]); }
             }
@@ -5882,10 +5880,9 @@ async function fetchCallHistory(leadId, phone, leadName, leadData) {
         }
         
         // Fallback to search by Leads field
-        var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?sort[0][field]=Timestamp&sort[0][direction]=desc&maxRecords=200';
-        
-        var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-        var data = await response.json();
+        var path = AIRTABLE_BASE + '/' + AIRTABLE_CALLS_TABLE + '?sort[0][field]=Timestamp&sort[0][direction]=desc&maxRecords=200';
+
+        var data = await fetchAirtable(path);
         
         if (data.error || !data.records || data.records.length === 0) {
             showFallbackHistory(historyEl, leadData);
@@ -5967,15 +5964,11 @@ document.getElementById('searchLeadSaveNotes').addEventListener('click', async f
     statusEl.textContent = '';
     
     try {
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentSearchLeadId, {
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentSearchLeadId, {
             method: 'PATCH',
-            headers: {
-                'Authorization': 'Bearer ' + AIRTABLE_TOKEN,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ fields: { 'Client Notes': notes, 'Last Note Change': new Date().toISOString() }})
         });
-        
+
         if (response.ok) {
             statusEl.style.color = 'var(--success)';
             statusEl.textContent = '✅ Notes saved successfully!';
@@ -5989,7 +5982,7 @@ document.getElementById('searchLeadSaveNotes').addEventListener('click', async f
         statusEl.style.color = 'var(--danger)';
         statusEl.textContent = '❌ Failed to save notes. Please try again.';
     }
-    
+
     btn.disabled = false;
     btn.textContent = 'Save Changes';
 });
@@ -6007,17 +6000,13 @@ async function executeSearchLeadTakeover() {
     var btn = document.getElementById('searchLeadTakeOver');
     btn.disabled = true;
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg> Taking over...';
-    
+
     try {
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentSearchLeadId, {
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentSearchLeadId, {
             method: 'PATCH',
-            headers: {
-                'Authorization': 'Bearer ' + AIRTABLE_TOKEN,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ fields: { 'Status': 'Callback', 'Next Call Date': null }})
         });
-        
+
         if (response.ok) {
             showToast('Lead taken over! Status changed to Callback.', 'success');
             // Update the display
@@ -6342,9 +6331,8 @@ async function removePrioLead(leadId, btn) {
     btn.disabled = true;
     btn.textContent = '...';
     try {
-        await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+        await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Is Prio': false }})
         });
         showToast('Lead removed from PRIO', 'success');
@@ -6364,11 +6352,10 @@ document.getElementById('prioLeadBtn').addEventListener('click', async function(
     var btn = this;
     var isPrio = btn.classList.contains('is-prio');
     btn.disabled = true;
-    
+
     try {
-        await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+        await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Is Prio': !isPrio }})
         });
         
@@ -6440,11 +6427,10 @@ function openScheduleFromModal() {
 // Delete booking function
 async function deleteBooking(leadId, leadIndex, prioIndex) {
     if (!confirm('Remove this booking/callback time?')) return;
-    
+
     try {
-        await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
+        await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + leadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Booked Time': null }})
         });
         
@@ -6706,11 +6692,10 @@ document.getElementById('scheduleSaveBtn').addEventListener('click', async funct
     
     btn.disabled = true;
     btn.textContent = 'Saving...';
-    
+
     try {
-        await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
+        await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + scheduleLeadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: { 'Booked Time': bookedDateTime.toISOString() }})
         });
         
@@ -7065,18 +7050,17 @@ function deleteClientNote(index) {
 
 async function saveNotesToAirtable(isNewNote) {
     if (!currentLeadId) return;
-    
+
     try {
         var notesJson = JSON.stringify(window.currentClientNotes);
         // Only update Client Notes - other timestamp fields are computed/formula
         var fieldsToUpdate = { 'Client Notes': notesJson };
-        
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: fieldsToUpdate })
         });
-        
+
         if (!response.ok) {
             var errorData = await response.json();
             console.error('Airtable save error:', errorData);
@@ -7184,26 +7168,25 @@ function updateClientAttempts(attempts, isInitialLoad) {
 
 async function saveClientAttemptsToAirtable() {
     if (!currentLeadId) return;
-    
+
     try {
         var attemptsJson = JSON.stringify(window.currentClientAttempts || []);
         var fieldsToUpdate = { 'Client Attempts': attemptsJson };
-        
+
         // Update Client Last Call Timestamp to latest attempt time
         var lastCallTime = null;
         if (window.currentClientAttempts && window.currentClientAttempts.length > 0) {
             lastCallTime = window.currentClientAttempts[window.currentClientAttempts.length - 1].time;
             fieldsToUpdate['Client Last Call Timestamp'] = new Date(lastCallTime).toISOString();
         }
-        
+
         console.log('Saving to Airtable:', fieldsToUpdate);
-        
-        var response = await fetch('https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
+
+        var response = await fetchAirtableWithStatus(AIRTABLE_BASE + '/' + AIRTABLE_LEADS_TABLE + '/' + currentLeadId, {
             method: 'PATCH',
-            headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
             body: JSON.stringify({ fields: fieldsToUpdate })
         });
-        
+
         if (!response.ok) {
             var errorData = await response.json();
             console.error('Airtable error details:', JSON.stringify(errorData, null, 2));
@@ -7361,16 +7344,15 @@ supabase.auth.getSession().then(async function(result) {
 // === ADMIN FUNCTIONALITY ===
 async function initAdminPanel() {
     document.getElementById('adminPanel').style.display = 'block';
-    
+
     // Fetch all clients
     try {
         var allRecords = [];
         var offset = null;
         do {
-            var url = 'https://api.airtable.com/v0/' + AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?pageSize=100';
-            if (offset) url += '&offset=' + offset;
-            var response = await fetch(url, { headers: { 'Authorization': 'Bearer ' + AIRTABLE_TOKEN } });
-            var data = await response.json();
+            var path = AIRTABLE_BASE + '/' + AIRTABLE_CLIENTS_TABLE + '?pageSize=100';
+            if (offset) path += '&offset=' + offset;
+            var data = await fetchAirtable(path);
             if (data.records) allRecords = allRecords.concat(data.records);
             offset = data.offset;
         } while (offset);

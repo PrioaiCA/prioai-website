@@ -276,11 +276,10 @@ document.getElementById('onboardingForm').addEventListener('submit', function(e)
         'Start Date': new Date().toISOString().split('T')[0]
     };
     
-    // Save to Airtable
-    fetch('https://api.airtable.com/v0/applOjDjhH0RqLtBH/tblMptC862PyL7Znw', {
+    // Save to Airtable via secure proxy
+    fetch('/api/airtable?path=' + encodeURIComponent('applOjDjhH0RqLtBH/tblMptC862PyL7Znw'), {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer pat7G7IDgOiR6rbLQ.3a9db22c5170b90305b7504a63e6933bd54011b028ac384f3d29e9ad7bcdc0c3',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ fields: data })
