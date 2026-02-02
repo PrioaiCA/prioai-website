@@ -390,6 +390,7 @@ nav > .container-lg {
     font-size: var(--text-sm);
     font-weight: 500;
     display: none;
+    color: var(--text-primary);
 }
 
 @media (min-width: 768px) {
