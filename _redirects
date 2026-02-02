@@ -1,0 +1,3 @@
+# Redirect old dashboard URL to new subdomain
+/dashboard/* https://dash.prioai.ca/:splat 301
+/dashboard https://dash.prioai.ca 301
