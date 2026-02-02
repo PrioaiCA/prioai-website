@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Frequently asked questions about Prio AI - AI-powered lead qualification and appointment booking for real estate agents.">
+    <title>FAQ | Prio AI</title>
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container-lg">
+            <a href="/" class="logo">
+                <img src="/assets/logo_black.png" alt="Prio AI" class="logo-img logo-light">
+                <img src="/assets/logo_white.png" alt="Prio AI" class="logo-img logo-dark">
+            </a>
+            <ul class="nav-links">
+                <li><a href="/#features">Features</a></li>
+                <li><a href="/#how-it-works">How It Works</a></li>
+                <li><a href="/#pricing">Pricing</a></li>
+                <li><a href="/contact/">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-cta" id="navLoggedOut">
+                    <a href="/login/" class="btn btn-ghost btn-small">Log In</a>
+                    <a href="https://dash.prioai.ca" class="btn btn-primary btn-small">Get Started</a>
+                </div>
+                <div class="user-menu" id="navLoggedIn" style="display:none;">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <span class="user-avatar" id="userAvatar">U</span>
+                        <span id="userDisplayName">Account</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="https://dash.prioai.ca">Dashboard</a>
+                        <div class="divider"></div>
+                        <button class="logout" id="logoutBtn">Log Out</button>
+                    </div>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+        <a href="/#features">Features</a>
+        <a href="/#how-it-works">How It Works</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/contact/">Contact</a>
+        <div id="mobileLoggedOut">
+            <a href="/login/" class="btn btn-secondary">Log In</a>
+            <a href="https://dash.prioai.ca" class="btn btn-primary">Get Started</a>
+        </div>
+        <div id="mobileLoggedIn" style="display:none;">
+            <a href="https://dash.prioai.ca" class="btn btn-primary">Dashboard</a>
+            <button class="btn btn-secondary" id="mobileLogoutBtn">Log Out</button>
+        </div>
+    </div>
+
+    <main>
+        <!-- FAQ Section -->
+        <section class="faq-section" style="padding-top: 120px;">
+            <div class="container">
+                <header class="section-header">
+                    <span class="section-label">FAQ</span>
+                    <h2>Frequently Asked Questions</h2>
+                    <p style="color: var(--text-secondary); margin-top: var(--space-4);">Everything you need to know about Prio AI</p>
+                </header>
+                <div class="faq-grid">
+                    <!-- AI & Voice -->
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>Does it sound like AI?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Prio AI uses advanced voice synthesis that sounds natural and conversational. Most people can't tell the difference. The AI speaks with natural pacing, handles interruptions, and responds contextually to what leads say.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>What if someone asks if it's AI?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Prio AI is honest when directly asked. We believe transparency builds trust with potential clients. The AI will acknowledge it's an assistant and offer to connect them with you directly if they prefer.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>Can I customize what Prio AI says?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Absolutely. We tailor the script to your brand, market, and communication style. You review and approve everything before it goes live. Want to emphasize certain services or handle objections a specific way? We'll customize it.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>Can it handle objections?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Yes. Prio AI handles common objections naturally, answers questions about the process, and knows when to push and when to back off. It's trained on real estate conversations and understands buyer hesitations.</p>
+                        </div>
+                    </details>
+
+                    <!-- Speed & Calling -->
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>How fast does Prio AI call my leads?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Within seconds. Speed-to-lead is critical—leads contacted within 5 minutes are 100x more likely to convert than those contacted after 30 minutes. Prio AI ensures you never miss that golden window.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>What times does Prio AI make calls?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Prio AI calls during business hours based on the lead's timezone. You can also set your preferred calling windows. We respect quiet hours and won't call too early or too late.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>What happens if a lead doesn't answer?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Prio AI uses smart retry logic to call back at optimal times. It will leave a voicemail if configured and schedule follow-up attempts. You can set the maximum number of call attempts per lead.</p>
+                        </div>
+                    </details>
+
+                    <!-- Calendar & Booking -->
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>Can Prio AI book meetings directly on my calendar?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Yes. Prio AI integrates with Google Calendar and checks your availability in real-time. When a lead is ready to meet, the AI finds a time that works for both of you and books it automatically. You just show up.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>What happens if a lead isn't ready to book?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Prio AI schedules automatic follow-ups based on conversation signals. If someone says "call me in 2 weeks," it will. The AI keeps nurturing leads until they're ready, so nothing falls through the cracks.</p>
+                        </div>
+                    </details>
+
+                    <!-- Lead Management -->
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>How do I upload my leads?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Send us an Excel or CSV file, or connect your CRM directly. We handle the setup for you. Most clients are up and running within 24 hours of signing up.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>How does Prio AI know which leads to prioritize?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Based on conversation signals—timeline to buy/sell, motivation level, and engagement during calls. Hot leads surface to the top of your dashboard so you always know who deserves your personal attention first.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>Can Prio AI work with my old lead database?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Yes! Database revival is one of our most valuable features. Prio AI can re-engage old leads you haven't contacted in months or years. Many agents find hidden buyers they'd forgotten about.</p>
+                        </div>
+                    </details>
+
+                    <!-- Compliance -->
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>What about Do Not Call compliance?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Prio AI automatically detects DNC requests during calls and removes those contacts from your queue immediately. Full compliance is built in—you don't have to worry about it.</p>
+                        </div>
+                    </details>
+
+                    <!-- Pricing & Business -->
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>Is there a contract?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>No long-term contracts. Prio AI is month-to-month billing. Cancel anytime with no penalties or hidden fees. We believe in earning your business every month.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>What's included in each plan?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>All plans include every feature—AI calling, calendar booking, lead prioritization, follow-ups, and dashboard access. The only difference between plans is your monthly call volume. No feature gatekeeping.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-question">
+                            <span>How long does setup take?</span>
+                            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </summary>
+                        <div class="faq-answer">
+                            <p>Most clients are live within 24 hours. We handle the technical setup, customize your scripts, and connect your calendar. You'll receive your first call summaries as soon as leads start getting contacted.</p>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- CTA -->
+                <div style="text-align: center; margin-top: var(--space-12); padding: var(--space-8); background: var(--bg-secondary); border-radius: var(--radius-lg);">
+                    <h3 style="margin-bottom: var(--space-4);">Still have questions?</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">Our team is happy to help you understand if Prio AI is right for your business.</p>
+                    <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                        <a href="/contact/" class="btn btn-primary">Contact Us</a>
+                        <a href="/#pricing" class="btn btn-secondary">View Pricing</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+    // Set dark theme
+    document.documentElement.setAttribute('data-theme', 'dark');
+
+    // Mobile menu
+    (function() {
+        var btn = document.getElementById('mobileMenuBtn');
+        var menu = document.getElementById('mobileMenu');
+        var close = document.getElementById('mobileMenuClose');
+
+        btn.addEventListener('click', function() {
+            menu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        close.addEventListener('click', function() {
+            menu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        menu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                menu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+    })();
+
+    // User dropdown
+    (function() {
+        var btn = document.getElementById('userMenuBtn');
+        var dropdown = document.getElementById('userDropdown');
+        if (!btn || !dropdown) return;
+
+        btn.addEventListener('click', function() {
+            dropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                dropdown.classList.remove('active');
+            }
+        });
+    })();
+    </script>
+
+    <!-- Auth Check -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    (function() {
+        var SUPABASE_URL = "https://bflmikgoafdffezrfpgb.supabase.co";
+        var SUPABASE_KEY = "sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k";
+        var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        supabase.auth.getSession().then(function(result) {
+            if (result.data.session) {
+                var user = result.data.session.user;
+                var name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0] || 'User';
+
+                document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+                document.getElementById('userDisplayName').textContent = name;
+                document.getElementById('navLoggedOut').style.display = 'none';
+                document.getElementById('navLoggedIn').style.display = 'flex';
+                document.getElementById('mobileLoggedOut').style.display = 'none';
+                document.getElementById('mobileLoggedIn').style.display = 'block';
+            }
+        });
+
+        var logoutBtn = document.getElementById('logoutBtn');
+        var mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+        function handleLogout() {
+            supabase.auth.signOut().then(function() {
+                window.location.reload();
+            });
+        }
+
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
+    })();
+    </script>
+</body>
+</html>
