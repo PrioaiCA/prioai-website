@@ -26,10 +26,6 @@
                 <li><a href="/contact/">Contact</a></li>
             </ul>
             <div class="nav-right">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
                 <div class="nav-cta" id="navLoggedOut">
                     <a href="/login/" class="btn btn-ghost btn-small">Log In</a>
                     <a href="https://dash.prioai.ca" class="btn btn-primary btn-small">Get Started</a>
@@ -307,37 +303,37 @@
                 <div class="testimonials-grid">
                     <article class="testimonial-card">
                         <blockquote>
-                            <p>"Prio AI booked 12 appointments in its first week. More than my VA did in a month."</p>
+                            <p>"Prio AI books meetings directly on my calendar while I focus on closing deals. It's like having a tireless assistant working 24/7."</p>
                         </blockquote>
                         <footer class="testimonial-author">
-                            <div class="author-avatar">SK</div>
+                            <div class="author-avatar">SS</div>
                             <div class="author-info">
-                                <cite>Sarah K.</cite>
-                                <span>Real Estate Agent, Toronto</span>
+                                <cite>Sahib Singh</cite>
+                                <span>Realtor, Royal Lepage Signature Realty</span>
                             </div>
                         </footer>
                     </article>
                     <article class="testimonial-card">
                         <blockquote>
-                            <p>"The database revival alone paid for a year of service."</p>
+                            <p>"No lead falls through the cracks anymore. The continuous follow-ups have doubled my conversion rate from online leads."</p>
                         </blockquote>
                         <footer class="testimonial-author">
-                            <div class="author-avatar">MR</div>
+                            <div class="author-avatar">KA</div>
                             <div class="author-info">
-                                <cite>Michael R.</cite>
-                                <span>Mortgage Agent, Vancouver</span>
+                                <cite>Kamal Athwal</cite>
+                                <span>Realtor, Century 21 People's Choice</span>
                             </div>
                         </footer>
                     </article>
                     <article class="testimonial-card">
                         <blockquote>
-                            <p>"My leads used to go cold within hours. Now they're called within seconds."</p>
+                            <p>"Prio AI prioritizes the hot leads so I know exactly who to call first. I'm spending my time on conversations that actually convert."</p>
                         </blockquote>
                         <footer class="testimonial-author">
-                            <div class="author-avatar">JL</div>
+                            <div class="author-avatar">RD</div>
                             <div class="author-info">
-                                <cite>Jennifer L.</cite>
-                                <span>Real Estate Agent, Calgary</span>
+                                <cite>Robby Durbajhai</cite>
+                                <span>Realtor, Century 21 People's Choice</span>
                             </div>
                         </footer>
                     </article>
@@ -454,19 +450,8 @@
 
     <!-- Scripts -->
     <script>
-    // Theme toggle
-    (function() {
-        var html = document.documentElement;
-        var toggle = document.getElementById('themeToggle');
-        var saved = localStorage.getItem('theme') || 'dark';
-        html.setAttribute('data-theme', saved);
-        
-        toggle.addEventListener('click', function() {
-            var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-        });
-    })();
+    // Set dark theme
+    document.documentElement.setAttribute('data-theme', 'dark');
 
     // Mobile menu
     (function() {
