@@ -1024,9 +1024,9 @@ section {
     margin-top: var(--space-3);
 }
 
-.promo-banner-alt {
-    border-color: var(--border-primary);
-    background: linear-gradient(135deg, hsla(0, 0%, 50%, 0.12), hsla(0, 0%, 50%, 0.04));
+.promo-banner-addon {
+    border-color: hsl(190, 60%, 45%);
+    background: linear-gradient(135deg, hsla(190, 60%, 45%, 0.12), hsla(190, 60%, 45%, 0.04));
 }
 
 .promo-tag {
@@ -1039,9 +1039,9 @@ section {
     border-radius: 999px;
 }
 
-.promo-tag-alt {
-    background: var(--text-tertiary);
-    color: var(--bg-primary);
+.promo-tag-addon {
+    background: hsl(190, 60%, 45%);
+    color: #000;
 }
 
 .promo-content {
@@ -1056,8 +1056,18 @@ section {
     color: var(--accent);
 }
 
-.promo-highlight-alt {
-    color: var(--text-primary);
+.promo-highlight-addon {
+    color: hsl(190, 60%, 55%);
+}
+
+.btn-outline-light {
+    background: transparent;
+    color: hsl(190, 60%, 55%);
+    border: 1px solid hsl(190, 60%, 45%);
+}
+
+.btn-outline-light:hover {
+    background: hsla(190, 60%, 45%, 0.1);
 }
 
 .promo-detail {
