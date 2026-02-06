@@ -53,7 +53,7 @@
                 <p>Have questions? We'd love to hear from you.</p>
             </div>
 
-            <form id="contactForm" action="https://formspree.io/f/info@prioai.ca" method="POST">
+            <form id="contactForm" action="https://n8n.prioai.ca/webhook/feedback" method="POST">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" placeholder="Your name" required>
@@ -147,10 +147,17 @@
         errorMsg.style.display = 'none';
 
         try {
+            var formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
             var response = await fetch(this.action, {
                 method: 'POST',
-                body: new FormData(this),
-                headers: { 'Accept': 'application/json' }
+                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'application/json' }
             });
 
             if (response.ok) {
