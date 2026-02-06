@@ -992,6 +992,22 @@ section {
     font-weight: 600;
 }
 
+.pricing-features li.free-leads {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.pricing-features li.free-leads::before {
+    content: '';
+}
+
+.pricing-footnote {
+    text-align: right;
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    margin-top: var(--space-4);
+}
+
 /* Promo Banner */
 .promo-banner {
     display: flex;
