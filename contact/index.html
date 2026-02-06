@@ -66,6 +66,7 @@
                     <label for="subject">Subject</label>
                     <select id="subject" name="subject">
                         <option value="General Inquiry">General Inquiry</option>
+                        <option value="Demo Request">Request a Demo</option>
                         <option value="Sales">Sales / Pricing</option>
                         <option value="Support">Technical Support</option>
                         <option value="Enterprise">Enterprise Plan</option>
@@ -122,6 +123,15 @@
         btn.addEventListener('click', function() { menu.classList.add('active'); document.body.style.overflow = 'hidden'; });
         close.addEventListener('click', function() { menu.classList.remove('active'); document.body.style.overflow = ''; });
         menu.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', function() { menu.classList.remove('active'); document.body.style.overflow = ''; }); });
+    })();
+
+    // Prefill form for demo requests
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('demo') === 'true') {
+            document.getElementById('subject').value = 'Demo Request';
+            document.getElementById('message').value = "Hi, I'd like to request a demo of Prio AI to see how it can help with my real estate business.\n\nPlease contact me to schedule a time that works.";
+        }
     })();
 
     // Form submission
