@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Contact Prio AI - Get in touch with our team for questions about AI-powered lead qualification for real estate.">
     <title>Contact Us | Prio AI</title>
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
+    <link rel="icon" type="image/png" href="/assets/icon_white.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@
                 <p>Have questions? We'd love to hear from you.</p>
             </div>
 
-            <form id="contactForm" action="https://n8n.prioai.ca/webhook/feedback" method="POST">
+            <form id="contactForm" action="/api/contact" method="POST">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" placeholder="Your name" required>
@@ -125,12 +125,15 @@
         menu.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', function() { menu.classList.remove('active'); document.body.style.overflow = ''; }); });
     })();
 
-    // Prefill form for demo requests
+    // Prefill form based on URL params
     (function() {
         var params = new URLSearchParams(window.location.search);
         if (params.get('demo') === 'true') {
             document.getElementById('subject').value = 'Demo Request';
             document.getElementById('message').value = "Hi, I'd like to request a demo of Prio AI to see how it can help with my real estate business.\n\nPlease contact me to schedule a time that works.";
+        } else if (params.get('enterprise') === 'true') {
+            document.getElementById('subject').value = 'Enterprise';
+            document.getElementById('message').value = "Hi, I'm interested in the Enterprise plan for my team/brokerage.\n\nI'd like to learn more about:\n- Custom call volume and pricing\n- Dedicated support options\n- Custom integrations\n- SLA guarantees\n\nPlease contact me to discuss our requirements.";
         }
     })();
 
