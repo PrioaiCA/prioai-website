@@ -1141,7 +1141,7 @@ section {
 }
 
 .lead-bonus-callout strong {
-    color: var(--accent);
+    color: var(--text-primary);
     font-weight: 600;
 }
 
@@ -1149,7 +1149,7 @@ section {
 .lead-bonus-line {
     font-size: var(--text-xs);
     font-weight: 500;
-    color: var(--accent);
+    color: var(--text-secondary);
     text-align: center;
     margin-bottom: var(--space-4);
     opacity: 0;
