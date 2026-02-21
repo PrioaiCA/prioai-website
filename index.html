@@ -209,7 +209,7 @@
                 </div>
 
                 <!-- Lead Bonus Callout -->
-                <p class="lead-bonus-callout" id="leadBonusCallout">Sign up for a 3, 6, or 12 month plan and get up to <strong>500 bonus leads</strong> to jump-start your pipeline</p>
+                <p class="lead-bonus-callout">Sign up for a 3, 6, or 12 month plan and get up to <strong>500 bonus leads</strong> to jump-start your pipeline</p>
 
                 <!-- Term Toggle -->
                 <div class="term-toggle" id="termToggle">
@@ -555,8 +555,7 @@
             growthPrice: document.getElementById('growthPrice'),
             growthMeta: document.getElementById('growthMeta'),
             growthCallout: document.getElementById('growthCallout'),
-            growthLeadBonus: document.getElementById('growthLeadBonus'),
-            leadBonusCallout: document.getElementById('leadBonusCallout')
+            growthLeadBonus: document.getElementById('growthLeadBonus')
         };
 
         function formatNum(n) {
@@ -568,11 +567,6 @@
             var idPrefixes = ['starter', 'pro', 'growth'];
             var months = term === 'monthly' ? 1 : parseInt(term);
             var isCommitment = term !== 'monthly';
-
-            // Show/hide the lead bonus callout above the slider
-            if (els.leadBonusCallout) {
-                els.leadBonusCallout.classList.toggle('visible', isCommitment);
-            }
 
             for (var i = 0; i < plans.length; i++) {
                 var plan = pricingData[plans[i]];

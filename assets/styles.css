@@ -1138,20 +1138,11 @@ section {
     color: var(--text-secondary);
     margin: 0 auto var(--space-6);
     max-width: 520px;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity var(--transition-base), max-height var(--transition-base);
 }
 
 .lead-bonus-callout strong {
     color: var(--accent);
     font-weight: 600;
-}
-
-.lead-bonus-callout.visible {
-    opacity: 1;
-    max-height: 60px;
 }
 
 /* Lead Bonus Line (on cards) */
