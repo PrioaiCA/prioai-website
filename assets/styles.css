@@ -852,6 +852,23 @@ section {
 }
 
 /* --------------------------------------------------------------------------
+   Value Bridge (quote between sections)
+   -------------------------------------------------------------------------- */
+.value-bridge {
+    padding: var(--space-8) 0;
+    text-align: center;
+}
+
+.value-bridge-text {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
    Pricing Section
    -------------------------------------------------------------------------- */
 .pricing-section {
@@ -1112,6 +1129,47 @@ section {
     background: var(--accent-muted);
     color: var(--accent);
     border: 1px solid hsla(var(--brand-hue), 60%, 50%, 0.3);
+}
+
+/* Lead Bonus Callout (above toggle) */
+.lead-bonus-callout {
+    text-align: center;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin: 0 auto var(--space-6);
+    max-width: 520px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity var(--transition-base), max-height var(--transition-base);
+}
+
+.lead-bonus-callout strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.lead-bonus-callout.visible {
+    opacity: 1;
+    max-height: 60px;
+}
+
+/* Lead Bonus Line (on cards) */
+.lead-bonus-line {
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: var(--space-4);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity var(--transition-base), max-height var(--transition-base);
+}
+
+.lead-bonus-line.visible {
+    opacity: 1;
+    max-height: 28px;
 }
 
 .pricing-card .btn {

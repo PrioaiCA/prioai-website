@@ -191,6 +191,13 @@
             </div>
         </section>
 
+        <!-- Value Proposition Bridge -->
+        <div class="value-bridge">
+            <div class="container">
+                <p class="value-bridge-text">Think of Prio AI as your always-on assistant that handles the busywork so you only spend time on deals that close.</p>
+            </div>
+        </div>
+
         <!-- Pricing Section -->
         <section class="pricing-section" id="pricing">
             <div class="container-lg">
@@ -200,6 +207,9 @@
                     <h2 class="pricing-headline">One closed deal pays for <span class="pricing-accent">4+ years*</span></h2>
                     <p class="pricing-subtitle">Choose your call volume. Pick your commitment. Every plan gets every feature.</p>
                 </div>
+
+                <!-- Lead Bonus Callout -->
+                <p class="lead-bonus-callout" id="leadBonusCallout">Sign up for a 3, 6, or 12 month plan and get up to <strong>500 bonus leads</strong> to jump-start your pipeline</p>
 
                 <!-- Term Toggle -->
                 <div class="term-toggle" id="termToggle">
@@ -221,6 +231,7 @@
                         </div>
                         <p class="pricing-meta" id="starterMeta">1,000 calls per month</p>
                         <div class="pricing-callout" id="starterCallout"></div>
+                        <p class="lead-bonus-line" id="starterLeadBonus"></p>
                         <a href="https://dash.prioai.ca?signup=true" class="btn btn-secondary btn-block">Get Started</a>
                     </article>
 
@@ -232,6 +243,7 @@
                         </div>
                         <p class="pricing-meta" id="proMeta">3,000 calls per month</p>
                         <div class="pricing-callout" id="proCallout"></div>
+                        <p class="lead-bonus-line" id="proLeadBonus"></p>
                         <a href="https://dash.prioai.ca?signup=true" class="btn btn-primary btn-block">Get Started</a>
                     </article>
 
@@ -242,6 +254,7 @@
                         </div>
                         <p class="pricing-meta" id="growthMeta">6,000 calls per month</p>
                         <div class="pricing-callout" id="growthCallout"></div>
+                        <p class="lead-bonus-line" id="growthLeadBonus"></p>
                         <a href="https://dash.prioai.ca?signup=true" class="btn btn-secondary btn-block">Get Started</a>
                     </article>
                 </div>
@@ -510,23 +523,23 @@
             starter: {
                 calls: 1000,
                 monthly: { price: 200, total: 200 },
-                3: { price: 133, total: 400, promo: 'First month free' },
-                6: { price: 150, total: 899, savings: 301 },
-                12: { price: 125, total: 1499, savings: 901 }
+                3: { price: 133, total: 400, promo: 'First month free', leads: 100 },
+                6: { price: 150, total: 899, savings: 301, leads: 200 },
+                12: { price: 125, total: 1499, savings: 901, leads: 300 }
             },
             professional: {
                 calls: 3000,
                 monthly: { price: 400, total: 400 },
-                3: { price: 267, total: 800, promo: 'First month free' },
-                6: { price: 300, total: 1799, savings: 601 },
-                12: { price: 250, total: 2999, savings: 1801 }
+                3: { price: 267, total: 800, promo: 'First month free', leads: 200 },
+                6: { price: 300, total: 1799, savings: 601, leads: 300 },
+                12: { price: 250, total: 2999, savings: 1801, leads: 400 }
             },
             growth: {
                 calls: 6000,
                 monthly: { price: 600, total: 600 },
-                3: { price: 400, total: 1200, promo: 'First month free' },
-                6: { price: 450, total: 2699, savings: 901 },
-                12: { price: 375, total: 4499, savings: 2701 }
+                3: { price: 400, total: 1200, promo: 'First month free', leads: 300 },
+                6: { price: 450, total: 2699, savings: 901, leads: 400 },
+                12: { price: 375, total: 4499, savings: 2701, leads: 500 }
             }
         };
 
@@ -534,12 +547,16 @@
             starterPrice: document.getElementById('starterPrice'),
             starterMeta: document.getElementById('starterMeta'),
             starterCallout: document.getElementById('starterCallout'),
+            starterLeadBonus: document.getElementById('starterLeadBonus'),
             proPrice: document.getElementById('proPrice'),
             proMeta: document.getElementById('proMeta'),
             proCallout: document.getElementById('proCallout'),
+            proLeadBonus: document.getElementById('proLeadBonus'),
             growthPrice: document.getElementById('growthPrice'),
             growthMeta: document.getElementById('growthMeta'),
-            growthCallout: document.getElementById('growthCallout')
+            growthCallout: document.getElementById('growthCallout'),
+            growthLeadBonus: document.getElementById('growthLeadBonus'),
+            leadBonusCallout: document.getElementById('leadBonusCallout')
         };
 
         function formatNum(n) {
@@ -550,6 +567,12 @@
             var plans = ['starter', 'professional', 'growth'];
             var idPrefixes = ['starter', 'pro', 'growth'];
             var months = term === 'monthly' ? 1 : parseInt(term);
+            var isCommitment = term !== 'monthly';
+
+            // Show/hide the lead bonus callout above the slider
+            if (els.leadBonusCallout) {
+                els.leadBonusCallout.classList.toggle('visible', isCommitment);
+            }
 
             for (var i = 0; i < plans.length; i++) {
                 var plan = pricingData[plans[i]];
@@ -569,6 +592,18 @@
                         els[prefix + 'Callout'].innerHTML = '<span class="callout-badge callout-promo">' + data.promo + '</span>';
                     } else if (data.savings) {
                         els[prefix + 'Callout'].innerHTML = '<span class="callout-badge callout-savings">Save $' + formatNum(data.savings) + ' vs. monthly</span>';
+                    }
+                }
+
+                // Lead bonus line
+                var leadEl = els[prefix + 'LeadBonus'];
+                if (leadEl) {
+                    if (isCommitment && data.leads) {
+                        leadEl.textContent = '+ ' + data.leads + ' bonus leads included';
+                        leadEl.classList.add('visible');
+                    } else {
+                        leadEl.textContent = '';
+                        leadEl.classList.remove('visible');
                     }
                 }
             }
