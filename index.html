@@ -317,6 +317,7 @@
 
                 <!-- Footnote -->
                 <p class="pricing-footnote">*Based on an average closed deal commission of $10,000. Starter plan at $1,499/year.</p>
+                <p class="pricing-footnote">**3-month promotional pricing includes one month free. After the 3-month term, pricing reverts to standard monthly rates (Starter $200/mo, Professional $400/mo, Growth $600/mo).</p>
             </div>
         </section>
 
@@ -580,7 +581,9 @@
                     els[prefix + 'Callout'].innerHTML = '';
                 } else {
                     var pool = formatNum(plan.calls * months);
-                    els[prefix + 'Meta'].textContent = '$' + formatNum(data.total) + ' total \u00B7 ' + pool + ' calls across ' + months + ' months';
+                    var metaText = '$' + formatNum(data.total) + ' total \u00B7 ' + pool + ' calls across ' + months + ' months';
+                    if (data.promo) metaText += '**';
+                    els[prefix + 'Meta'].textContent = metaText;
 
                     if (data.promo) {
                         els[prefix + 'Callout'].innerHTML = '<span class="callout-badge callout-promo">' + data.promo + '</span>';
